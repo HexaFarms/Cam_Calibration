@@ -12,7 +12,7 @@ def parse_args():
         description="Distort images")
 
     parser.add_argument("--calib",
-                        default='calibration/dev-0.npz',
+                        default='calibration/RO/dev-0.npz',
                         help="Location of camera parameters.")
 
     parser.add_argument("--input",
@@ -20,7 +20,7 @@ def parse_args():
                         help="Location of image directory to be undistorted.")
 
     parser.add_argument("--output",
-                        default="output",
+                        default="output/RO",
                         help="Location of image directory to be saved.")
 
     args = parser.parse_args()
@@ -53,7 +53,7 @@ def undistort_api(config: str, input_dir: str, output_dir: str, conv_format='jpg
 
         # undistort
         if mode == 'fisheye':
-            newcameramtx = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(mtx, dist[:,:-1].squeeze(), (w, h), np.eye(3), balance=0)
+            newcameramtx = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(mtx, dist[:,:-1].squeeze(), (w, h), np.eye(3), balance=1)
             map1, map2 = cv2.fisheye.initUndistortRectifyMap(
                 K=mtx, D=dist[:,:-1].squeeze(), R=np.eye(3), P=newcameramtx, size=(w, h), m1type=cv2.CV_32FC1)
             dst = cv2.remap(
